@@ -1,0 +1,30 @@
+# LibreChat config for the AI Power Grid (OpenAI-compatible).
+# Docs: https://www.librechat.ai/docs/configuration/librechat_yaml
+#
+# 1. Place this file next to your docker-compose.yml (or merge the
+#    endpoints.custom entry below into your existing librechat.yaml).
+# 2. Add to LibreChat's .env:   AIPG_API_KEY=grid_your_key_here
+# 3. Restart LibreChat.
+version: 1.2.1
+cache: true
+
+endpoints:
+  custom:
+    - name: "AI Power Grid"
+      apiKey: "${AIPG_API_KEY}"
+      baseURL: "https://api.aipowergrid.io/v1"
+      # Auto-fetch the live model list from /v1/models (public endpoint).
+      models:
+        default:
+          - "deepseek-v4-flash-nvfp4"
+          - "gpt-oss-120b"
+          - "qwen3:8b"
+        fetch: true
+      # Use the non-reasoning model for auto-titles so they don't come back empty.
+      titleConvo: true
+      titleModel: "deepseek-v4-flash-nvfp4"
+      modelDisplayLabel: "AI Power Grid"
+      # Reasoning models (qwen3:*, gpt-oss-120b) need headroom or they return an
+      # empty message. Users can raise "Max Output Tokens" per chat; this sets a
+      # sane shared ceiling for context.
+      maxContextTokens: 32768
